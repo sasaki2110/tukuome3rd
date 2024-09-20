@@ -32,7 +32,7 @@ export default function Home() {
                 <h2>探す</h2>
             </div>
             {repos && repos.map((repo) => (
-                <div>
+                <div key={repo.id_n}>
                 <a>
                 <Image
                     src={repo.image}

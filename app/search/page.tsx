@@ -31,11 +31,12 @@ export default function Home() {
     const router = useRouter();
 
     // イベントハンドラ関数
-    const handleClick = (e) => {
+    const handleClick = (e: any) => {
         e.preventDefault()
         alert("aaa")
         router.push("/")
     }
+
 
     // 初期にレシピを呼び出すエフェクト
     useEffect(() => {

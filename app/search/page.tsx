@@ -3,6 +3,7 @@
 import Image from "next/image";
 
 import { useState , useEffect, Dispatch, SetStateAction } from 'react'
+import { useRouter } from "next/navigation"
 
 import { Repo, GetAllRepos } from '@/app/lib/dbaccess'
 
@@ -26,6 +27,16 @@ export default function Home() {
     // レシピ用のステート
     const [repos, setRepos] = useState<Repo[] | undefined>(undefined)
 
+    // 画面遷移用のルーター
+    const router = useRouter();
+
+    // イベントハンドラ関数
+    const handleClick = (e) => {
+        e.preventDefault()
+        alert("aaa")
+        router.push("/")
+    }
+
     // 初期にレシピを呼び出すエフェクト
     useEffect(() => {
         if(repos === undefined) {
@@ -38,11 +49,14 @@ export default function Home() {
             <div className='w-4/5'>
                 <h2>探す</h2>
             </div>
+            <div>
+                <button type="button" onClick={handleClick}>押せる？</button>
+            </div>
             <div className="grid grid-cols-2">
                 {repos && repos.map((repo) => (
                     <div key={repo.id_n} className="p-2 m-2 border rounded shadow-lg">
                         <div>
-                            <a>
+                            <a href={"https://cookpad.com/jp/recipes/" + repo.id_n} target="_blank">
                             <Image
                                 className="object-cover h-48 w-full"
                                 src={repo.image}

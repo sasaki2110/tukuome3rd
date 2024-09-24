@@ -8,10 +8,10 @@ import { Repo, GetAllRepos } from '@/app/lib/dbaccess'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { faComment } from "@fortawesome/free-solid-svg-icons";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as faHeartReg } from "@fortawesome/free-regular-svg-icons";
+import { faStar as faStarReg} from "@fortawesome/free-regular-svg-icons";
+import { faComment as faCommentReg} from "@fortawesome/free-regular-svg-icons";
+import { faCheck as faCheckSolid } from "@fortawesome/free-solid-svg-icons";
 
 /**
  * レシピ一覧取得（awaitで呼び出すための踏み台）
@@ -34,7 +34,7 @@ export default function Home() {
     }, [repos])
 
     return (
-        <div className="flex min-h-screen flex-col items-left p-8">
+        <div className="flex min-h-screen flex-col items-left p-2">
             <div className='w-4/5'>
                 <h2>探す</h2>
             </div>
@@ -44,6 +44,7 @@ export default function Home() {
                         <div>
                             <a>
                             <Image
+                                className="object-cover h-48 w-full"
                                 src={repo.image}
                                 alt=""
                                 height={200}
@@ -57,18 +58,18 @@ export default function Home() {
                         <div>
                             {repo.reposu_n.toLocaleString() + " 件"}
                         </div>
-                        <div className="grid grid-cols-4 m-2">
+                        <div className="grid grid-cols-4 mt-2">
                             <div className="text-center">
-                                <FontAwesomeIcon icon={faHeart} className="h-[20px]" color="red"/>
+                                <FontAwesomeIcon icon={faHeartReg} className="h-[20px]" color="red"/>
                             </div>
                             <div className="text-center">
-                                <FontAwesomeIcon icon={faCheck} className="h-[20px]"/>
+                                <FontAwesomeIcon icon={faCheckSolid} className="h-[20px]"/>
                             </div>
                             <div className="text-center">
-                                <FontAwesomeIcon icon={faStar} className="h-[20px]" color="orange"/>
+                                <FontAwesomeIcon icon={faStarReg} className="h-[20px]" color="orange"/>
                             </div>
                             <div className="text-center">
-                                <FontAwesomeIcon icon={faComment} className="h-[20px]"/>
+                                <FontAwesomeIcon icon={faCommentReg} className="h-[20px]"/>
                             </div>
                         </div>
                     </div>

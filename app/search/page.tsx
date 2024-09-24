@@ -32,8 +32,9 @@ export default function Home() {
 
     // イベントハンドラ関数
     const handleClick = (e: any) => {
+        console.log("タイプは=" + e.type + "だった")
         e.preventDefault()
-        alert("aaa")
+        alert(typeof(e))
         router.push("/")
     }
 

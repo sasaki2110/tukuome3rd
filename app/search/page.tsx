@@ -1,14 +1,17 @@
 'use client'
 
+// next用インポート
 import Image from "next/image";
 
+// react用インポート
 import { useState , useEffect, Dispatch, SetStateAction } from 'react'
 import { useRouter } from "next/navigation"
 
-import { Repo, GetAllRepos } from '@/app/lib/dbaccess'
+// 自前のDBACCESS用インポート
+import { Repo, GetAllRepos, GetReposByText, SearchCond } from '@/app/lib/dbaccess'
 
+// アイコンフォント用インポート
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import { faHeart as faHeartReg } from "@fortawesome/free-regular-svg-icons";
 import { faStar as faStarReg} from "@fortawesome/free-regular-svg-icons";
 import { faComment as faCommentReg} from "@fortawesome/free-regular-svg-icons";
@@ -16,10 +19,17 @@ import { faCheck as faCheckSolid } from "@fortawesome/free-solid-svg-icons";
 
 /**
  * レシピ一覧取得（awaitで呼び出すための踏み台）
- * ここは別に待ち合わせ出来ないから、promiseでも良い。
  */
 async function getAllRepos(setRepos: Dispatch<SetStateAction<Repo[] | undefined>>) {
     const repos = await GetAllRepos();
+    setRepos(repos);
+}
+
+/**
+ * レシピ取得by文字列（awaitで呼び出すための踏み台）
+ */
+async function getReposByText(setRepos: Dispatch<SetStateAction<Repo[] | undefined>>, s: string) {
+    const repos = await GetReposByText(s);
     setRepos(repos);
 }
 
@@ -27,22 +37,43 @@ export default function Home() {
     // レシピ用のステート
     const [repos, setRepos] = useState<Repo[] | undefined>(undefined)
 
+    // 検索条件用のステート
+    const [searchCond, setSearchCond] = useState<SearchCond | undefined>(undefined)
+
     // 画面遷移用のルーター
     const router = useRouter();
 
-    // イベントハンドラ関数
-    const handleClick = (e: any) => {
-        console.log("タイプは=" + e.type + "だった")
+    // イベントハンドラ関数 textのonChange
+    const handleOnChange = (e: any) => {
+        // 本来のイベントハンドラ呼び出し
         e.preventDefault()
-        alert(typeof(e))
-        router.push("/")
+
+        // 画面を再描画する為に、レシピ一覧をクリア
+        setRepos(undefined)
+
+        // 検索条件を設定
+        const ss: SearchCond = {mode: "text",  text: e.target.value}
+        setSearchCond(ss)
+
+        // 探す画面（自分自身）を呼び出し
+        router.push("/search")
     }
 
+    // 検索条件初期化
+    if(searchCond === undefined) {
+        const ss: SearchCond = {mode: "all",  text:""}
+        setSearchCond(ss)
+    }
 
     // 初期にレシピを呼び出すエフェクト
     useEffect(() => {
         if(repos === undefined) {
-            getAllRepos(setRepos);
+            if(searchCond?.mode === "all") {
+                getAllRepos(setRepos)
+            }
+            if(searchCond?.mode === "text") {
+                getReposByText(setRepos, searchCond.text)
+            }
         }
     }, [repos])
 
@@ -52,15 +83,20 @@ export default function Home() {
                 <h2>探す</h2>
             </div>
             <div>
-                <button type="button" onClick={handleClick}>押せる？</button>
+                <input
+                    className="border"
+                    placeholder={"検索文字列を入力してください"}
+                    type={"text"}
+                    onChange={handleOnChange}
+                />                
             </div>
             <div className="grid grid-cols-2">
-                {repos && repos.map((repo) => (
-                    <div key={repo.id_n} className="p-2 m-2 border rounded shadow-lg">
+                {repos && repos.map((repo: Repo) => (
+                    <div key={repo.id_n} className="p-2 m-2 border rounded-lg shadow-lg">
                         <div>
                             <a href={"https://cookpad.com/jp/recipes/" + repo.id_n} target="_blank">
                             <Image
-                                className="object-cover h-48 w-full"
+                                className="object-cover h-48 w-full rounded-lg"
                                 src={repo.image}
                                 alt=""
                                 height={200}

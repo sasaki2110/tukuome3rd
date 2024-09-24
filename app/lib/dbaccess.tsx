@@ -19,11 +19,28 @@ export type Repo = {
     issub: number,
 }
 
+// 検索条件の型宣言
+export type SearchCond = {
+    mode: string,
+    text: string,
+}
+
 /**
  * レシピ全件読み出し
  */
 export async function GetAllRepos() {
     const data = await sql`select * from repo`
+
+    const repos:Repo[] = JSON.parse(JSON.stringify(data.rows))
+
+    return repos;
+}
+
+/**
+ * レシピ文字列検索
+ */
+export async function GetReposByText(str: string) {
+    const data = await sql`select * from repo where title like '%'||${str}||'%'`
 
     const repos:Repo[] = JSON.parse(JSON.stringify(data.rows))
 

@@ -29,7 +29,7 @@ export type SearchCond = {
  * レシピ全件読み出し
  */
 export async function GetAllRepos() {
-    const data = await sql`select * from repo`
+    const data = await sql`select * from repo order by reposu_n desc`
 
     const repos:Repo[] = JSON.parse(JSON.stringify(data.rows))
 
@@ -40,7 +40,7 @@ export async function GetAllRepos() {
  * レシピ文字列検索
  */
 export async function GetReposByText(str: string) {
-    const data = await sql`select * from repo where title like '%'||${str}||'%'`
+    const data = await sql`select * from repo where title like '%'||${str}||'%' order by reposu_n desc`
 
     const repos:Repo[] = JSON.parse(JSON.stringify(data.rows))
 

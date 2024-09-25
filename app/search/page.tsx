@@ -12,9 +12,16 @@ import { Repo, GetAllRepos, GetReposByText, SearchCond } from '@/app/lib/dbacces
 
 // アイコンフォント用インポート
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import { faHeart as faHeartReg } from "@fortawesome/free-regular-svg-icons";
+import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
+
 import { faStar as faStarReg} from "@fortawesome/free-regular-svg-icons";
+import { faStar as faStarSolid} from "@fortawesome/free-solid-svg-icons";
+
 import { faComment as faCommentReg} from "@fortawesome/free-regular-svg-icons";
+import { faComment as faCommentSolid} from "@fortawesome/free-solid-svg-icons";
+
 import { faCheck as faCheckSolid } from "@fortawesome/free-solid-svg-icons";
 
 /**
@@ -90,10 +97,13 @@ export default function Home() {
                     onChange={handleOnChange}
                 />                
             </div>
+
             <div className="grid grid-cols-2">
+                {/* 読みだしたレシピでループ */}
                 {repos && repos.map((repo: Repo) => (
                     <div key={repo.id_n} className="p-2 m-2 border rounded-lg shadow-lg">
                         <div>
+                            {/* イメージ 兼 cookpadへのリンク */}
                             <a href={"https://cookpad.com/jp/recipes/" + repo.id_n} target="_blank">
                             <Image
                                 className="object-cover h-48 w-full rounded-lg"
@@ -105,23 +115,46 @@ export default function Home() {
                             </a>
                         </div>
                         <div>
+                            {/* タイトル表示 */}
                             {repo.title}                            
                         </div>
                         <div>
+                            {/* つくれぽ数表示 */}
                             {repo.reposu_n.toLocaleString() + " 件"}
                         </div>
+
+                        {/* 操作アイコンエリア */}
                         <div className="grid grid-cols-4 mt-2">
+                            {/* ハート（いいね） */}
                             <div className="text-center">
-                                <FontAwesomeIcon icon={faHeartReg} className="h-[20px]" color="red"/>
+                                {repo.rank === 0 ? (
+                                    <FontAwesomeIcon icon={faHeartReg} className="h-[20px]"/>
+                                ) : (
+                                    <FontAwesomeIcon icon={faHeartSolid} className="h-[20px]" color="red"/>
+                                )}
                             </div>
+
+                            {/* 既読（チェック） */}
                             <div className="text-center">
-                                <FontAwesomeIcon icon={faCheckSolid} className="h-[20px]"/>
+                                {repo.ismain === 9 ? (
+                                    <FontAwesomeIcon icon={faCheckSolid} className="h-[20px]"/>
+                                ) : (
+                                    <FontAwesomeIcon icon={faCheckSolid} className="h-[20px]" color="gray"/>
+                                )}
                             </div>
+
+                            {/* フォルダ（星） */}
                             <div className="text-center">
                                 <FontAwesomeIcon icon={faStarReg} className="h-[20px]" color="orange"/>
                             </div>
+
+                            {/* コメント */}
                             <div className="text-center">
-                                <FontAwesomeIcon icon={faCommentReg} className="h-[20px]"/>
+                                {repo.comment === "" ? (
+                                    <FontAwesomeIcon icon={faCommentReg} className="h-[20px]"/>
+                                ) : (
+                                    <FontAwesomeIcon icon={faCommentSolid} className="h-[20px]"/>
+                                )}
                             </div>
                         </div>
                     </div>

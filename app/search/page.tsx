@@ -17,7 +17,7 @@ import { faHeart as faHeartReg } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
 
 import { faStar as faStarReg} from "@fortawesome/free-regular-svg-icons";
-import { faStar as faStarSolid} from "@fortawesome/free-solid-svg-icons";
+//import { faStar as faStarSolid} from "@fortawesome/free-solid-svg-icons";
 
 import { faComment as faCommentReg} from "@fortawesome/free-regular-svg-icons";
 import { faComment as faCommentSolid} from "@fortawesome/free-solid-svg-icons";

@@ -86,12 +86,12 @@ export default function Home() {
 
     return (
         <div className="flex min-h-screen flex-col items-left p-2">
-            <div className='w-4/5'>
+            <div className='w-4/5 mt-20 px-2 mx-2'>
                 <h2>探す</h2>
             </div>
             <div>
                 <input
-                    className="border"
+                    className="border w-4/5 px-2 mx-2"
                     placeholder={"検索文字列を入力してください"}
                     type={"text"}
                     onChange={handleOnChange}

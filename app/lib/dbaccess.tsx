@@ -19,12 +19,6 @@ export type Repo = {
     issub: number,
 }
 
-// 検索条件の型宣言
-export type SearchCond = {
-    mode: string,
-    text: string,
-}
-
 /**
  * レシピ全件読み出し
  */
@@ -40,6 +34,10 @@ export async function GetAllRepos() {
  * レシピ文字列検索
  */
 export async function GetReposByText(str: string) {
+    // 検索文字列が無いと全件表示されるので、ヒットしないような値を指定して、表示を抑止
+    if(str === "") {
+        str = "hoge-fuga"
+    }
     const data = await sql`select * from repo where title like '%'||${str}||'%' order by reposu_n desc`
 
     const repos:Repo[] = JSON.parse(JSON.stringify(data.rows))

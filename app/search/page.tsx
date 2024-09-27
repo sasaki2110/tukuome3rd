@@ -8,7 +8,7 @@ import { useState , useEffect, Dispatch, SetStateAction } from 'react'
 import { useRouter } from "next/navigation"
 
 // 自前のDBACCESS用インポート
-import { Repo, GetAllRepos, GetReposByText, SearchCond } from '@/app/lib/dbaccess'
+import { Repo, GetAllRepos, GetReposByText } from '@/app/lib/dbaccess'
 
 // アイコンフォント用インポート
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,6 +23,10 @@ import { faComment as faCommentReg} from "@fortawesome/free-regular-svg-icons";
 import { faComment as faCommentSolid} from "@fortawesome/free-solid-svg-icons";
 
 import { faCheck as faCheckSolid } from "@fortawesome/free-solid-svg-icons";
+
+// ステート用インポート
+import { useRecoilState } from "recoil";
+import { useridState, searchModeState, searchValueState } from "../atom/myatom";
 
 /**
  * レシピ一覧取得（awaitで呼び出すための踏み台）
@@ -44,11 +48,15 @@ export default function Home() {
     // レシピ用のステート
     const [repos, setRepos] = useState<Repo[] | undefined>(undefined)
 
-    // 検索条件用のステート
-    const [searchCond, setSearchCond] = useState<SearchCond | undefined>(undefined)
-
     // 画面遷移用のルーター
     const router = useRouter();
+
+    // ステート取得
+    const [userid, ] = useRecoilState(useridState);
+    const [searchMode, setSearchMode] = useRecoilState(searchModeState)
+    const [searchValue, setSearchValue] = useRecoilState(searchValueState)
+
+    console.log("userid = [" + userid + "] searchMode = [" + searchMode + "] + searchValue = [" + searchValue + "]")
 
     // イベントハンドラ関数 textのonChange
     const handleOnChange = (e: any) => {
@@ -59,27 +67,23 @@ export default function Home() {
         setRepos(undefined)
 
         // 検索条件を設定
-        const ss: SearchCond = {mode: "text",  text: e.target.value}
-        setSearchCond(ss)
+        setSearchMode("text")
+        setSearchValue(e.target.value)
 
         // 探す画面（自分自身）を呼び出し
         router.push("/search")
-    }
 
-    // 検索条件初期化
-    if(searchCond === undefined) {
-        const ss: SearchCond = {mode: "all",  text:""}
-        setSearchCond(ss)
+        return false
     }
 
     // 初期にレシピを呼び出すエフェクト
     useEffect(() => {
         if(repos === undefined) {
-            if(searchCond?.mode === "all") {
+            if(searchMode === "all") {
                 getAllRepos(setRepos)
             }
-            if(searchCond?.mode === "text") {
-                getReposByText(setRepos, searchCond.text)
+            if(searchMode === "text") {
+                getReposByText(setRepos, searchValue)
             }
         }
     }, [repos])
@@ -92,6 +96,7 @@ export default function Home() {
             <div>
                 <input
                     className="border w-4/5 px-2 mx-2"
+                    id="sInput"
                     placeholder={"検索文字列を入力してください"}
                     type={"text"}
                     onChange={handleOnChange}

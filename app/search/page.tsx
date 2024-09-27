@@ -4,11 +4,14 @@
 import Image from "next/image";
 
 // react用インポート
-import { useState , useEffect, Dispatch, SetStateAction } from 'react'
+import { useState , useEffect } from 'react'
 import { useRouter } from "next/navigation"
 
-// 自前のDBACCESS用インポート
-import { Repo, GetAllRepos, GetReposByText } from '@/app/lib/dbaccess'
+// 自前の型定義インポート
+import { Repo } from "../model/model";
+
+// 自前のビジネスロジックインポート
+import { getAllRepos, getReposByText } from "../lib/biz"
 
 // アイコンフォント用インポート
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -27,22 +30,6 @@ import { faCheck as faCheckSolid } from "@fortawesome/free-solid-svg-icons";
 // ステート用インポート
 import { useRecoilState } from "recoil";
 import { useridState, searchModeState, searchValueState } from "../atom/myatom";
-
-/**
- * レシピ一覧取得（awaitで呼び出すための踏み台）
- */
-async function getAllRepos(setRepos: Dispatch<SetStateAction<Repo[] | undefined>>) {
-    const repos = await GetAllRepos();
-    setRepos(repos);
-}
-
-/**
- * レシピ取得by文字列（awaitで呼び出すための踏み台）
- */
-async function getReposByText(setRepos: Dispatch<SetStateAction<Repo[] | undefined>>, s: string) {
-    const repos = await GetReposByText(s);
-    setRepos(repos);
-}
 
 export default function Home() {
     // レシピ用のステート
@@ -67,7 +54,7 @@ export default function Home() {
         setRepos(undefined)
 
         // 検索条件を設定
-        setSearchMode("text")
+        setSearchMode("byTitle")
         setSearchValue(e.target.value)
 
         // 探す画面（自分自身）を呼び出し
@@ -80,10 +67,10 @@ export default function Home() {
     useEffect(() => {
         if(repos === undefined) {
             if(searchMode === "all") {
-                getAllRepos(setRepos)
+                getAllRepos(setRepos, userid)
             }
-            if(searchMode === "text") {
-                getReposByText(setRepos, searchValue)
+            if(searchMode === "byTitle") {
+                getReposByText(setRepos, userid, searchValue)
             }
         }
     }, [repos])

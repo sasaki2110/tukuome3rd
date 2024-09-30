@@ -8,10 +8,10 @@ import { useState , useEffect } from 'react'
 import { useRouter } from "next/navigation"
 
 // 自前の型定義インポート
-import { Repo } from "../model/model";
+import { Repo } from "@/app/model/model";
 
 // 自前のビジネスロジックインポート
-import { getAllRepos, getReposByText } from "../lib/biz"
+import { getAllRepos, getReposByText } from "@/app/lib/biz"
 
 // アイコンフォント用インポート
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

@@ -18,6 +18,9 @@ export type Repo = {
 export type Tag = {
     /// Windows 版とは異なり、mobile/web版は使いやすい形に成形
 
+    /// 主キー（ソート用）
+    id: number,
+
     /// タグのレベル
     /// 0:大タグ
     /// 1:中タグ
@@ -39,8 +42,12 @@ export type Tag = {
 }
 
 
+
 // 表示用タグ型（DISP型）
 export type DispTag = {
+    /// 主キー（ソート用）
+    id: number,
+
     /// 表示用名称
     /// 
     /// レベルに合わせた位置の文字列
@@ -70,5 +77,5 @@ export type DispTag = {
     /// 画面上（処理上も）下記を設定する
     /// 子タグあり：▼（ドリルダウンできるイメージ）　このタグが選ばれると、子タグの検索に行く
     /// 子タグなし：そのタグに含まれるレシピの件数　　このタグが選ばれると、そのタグでレシピを検索するように一覧画面へ戻る
-    hsschildren: string,
+    hasschildren: string,
 }
